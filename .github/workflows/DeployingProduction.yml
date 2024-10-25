@@ -5,10 +5,10 @@ on:
     branches:
       - main
 env:
-  DOCKER_COMPOSE_NAME: service-cicd-${{ github.ref_name }}
+  DOCKER_COMPOSE_NAME: ${{ github.ref_name }}
   
-  BACKEND_PORT: 8002
-  FRONTEND_PORT: 8001
+  BACKEND_PORT: 8128
+  FRONTEND_PORT: 8129
 
   BACKEND_PREIMAGE_PATH: preimages/backend
   FRONTEND_PREIMAGE_PATH: preimages/frontend
