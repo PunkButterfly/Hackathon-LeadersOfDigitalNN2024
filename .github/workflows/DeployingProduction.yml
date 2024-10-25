@@ -5,7 +5,7 @@ on:
     branches:
       - main
 env:
-  DOCKER_COMPOSE_NAME: hackathon-leaders-of-digital-${{ github.ref_name }}
+  DOCKER_COMPOSE_NAME: hackathon-leaders-of-digital-nn-2024-${{ github.ref_name }}
   
   BACKEND_PORT: 8128
   FRONTEND_PORT: 8129
