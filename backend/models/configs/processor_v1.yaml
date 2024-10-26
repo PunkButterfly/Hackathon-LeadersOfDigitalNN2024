@@ -1,0 +1,23 @@
+data:
+    columns:
+        clients:
+            {
+                'slctn_nmbr': 'int',
+                # 'clnt_id': 'str',
+                'accnt_id': 'str',
+                'gndr': 'int',
+                'brth_yr': 'int',
+                'prsnt_age': 'int',
+                'accnt_bgn_date': 'int',
+                # 'cprtn_prd_d': 'int',
+                'accnt_status': 'int',
+                'pnsn_age': 'int',
+                'okato': 'int',
+                'phn': 'int',
+                'email': 'int',
+                'lk': 'int',
+                'assgn_npo': 'int',
+                'assgn_ops': 'int',
+
+                'erly_pnsn_flg': 'int',
+            }
