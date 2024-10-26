@@ -3,6 +3,7 @@ import pandas as pd
 import random
 import yaml
 import os
+import random
 
 
 class DataProcessorV0:
@@ -58,8 +59,19 @@ class DataProcessorV1:
 
         return self.processed_data
 
+
 class DataProcessorV2:
+    """
+    Обработанный датасет, только клиенты
+    """
+    def __init__(self, path_to_configs, config_name):
+        current_weights_path = os.path.join(path_to_configs, config_name)
+        with open(current_weights_path, 'r') as file:
+            self.config = yaml.safe_load(file)
+
     def process(self, transactions: pd.DataFrame, clients: pd.DataFrame, mode: str = 'inference'):
+        
+
         clients['gndr'] = clients['gndr'].map({'ж': 0, 'м': 1})
         clients['phn'] = clients['phn'].map({'нет': 0, 'да': 1})
         clients['email'] = clients['email'].map({'нет': 0, 'да': 1})
@@ -89,12 +101,6 @@ class DataProcessorV2:
         clients_not_on_pension['accnt_end_date'] = pd.to_datetime('2030-01-01')
         clients = clients.merge(pd.concat([clients_on_pension, clients_not_on_pension]).loc[:, ['clnt_id', 'accnt_end_date']], on='clnt_id', how='inner')
 
-        # Флаг нахождения на пенсии
-        clients['on_pension_flg'] = clients['erly_pnsn_flg'].case_when([(clients['erly_pnsn_flg'] == 1, 1),
-                                    ((clients['erly_pnsn_flg'] == 0) & (clients['accnt_status'] =='Накопительный период'), 0),
-                                    ((clients['erly_pnsn_flg'] == 0) & (clients['accnt_status'] =='Выплатной период'), 1)
-                                    ])
-
 
         # Добавляем дату выхода на пенсию по закону
         clients['accnt_expected_end_date'] = clients['accnt_bgn_date'] + (clients['pnsn_age'] - clients['age_agreement_start']).apply(lambda x: pd.to_timedelta(int(x)*365, unit = 'days'))
@@ -111,62 +117,23 @@ class DataProcessorV2:
             )
         ]))
         clients['accnt_past_date'] = pd.to_datetime(clients['accnt_past_date'])
-        clients['accnt_past_age'] = clients['accnt_past_date'] - clients['accnt_bgn_date']
+        clients['accnt_past_age'] = clients['accnt_past_date'].dt.year - clients['brth_yr']
         
         clients['accnt_past_date'] = clients['accnt_past_date'].astype(np.int64) // 1e9
         clients['accnt_bgn_date'] = clients['accnt_bgn_date'].astype(np.int64) // 1e9
 
-        clients_columns = [
-            'accnt_id',
-            'gndr',
-            'prsnt_age',
-            'accnt_bgn_date',
-            'pnsn_age',
-            #'prvs_npf',
-            'prvs_npf_flg',
-            'okato',
-            'phn',
-            'email',
-            'lk',
-            'assgn_npo',
-            'assgn_ops',
+        clients_columns_typing = self.config['data']['columns']['clients']
+        clients_columns = list(self.config['data']['columns']['clients'].keys())
 
-            'accnt_past_date',
-            'accnt_past_age',
-            'age_agreement_start',
-            'accnt_expected_end_date',
-
-            'erly_pnsn_flg'
-        ]
-        preprocessed_data = clients[clients_columns]
-        self.processed_data = preprocessed_data.astype(
-            {
-                'accnt_id': 'str',
-                'gndr': np.int64,
-                'prsnt_age': np.int64,
-                'accnt_bgn_date': np.int64,
-                'pnsn_age': np.int64,
-                #'prvs_npf',
-                'prvs_npf_flg': np.int64,
-                'okato': np.int64,
-                'phn': np.int64,
-                'email': np.int64,
-                'lk': np.int64,
-                'assgn_npo': np.int64,
-                'assgn_ops': np.int64,
-
-                'accnt_past_date': np.int64,
-                'accnt_past_age': np.int64,
-                'age_agreement_start': np.int64,
-                'accnt_expected_end_date': np.int64,
-
-                'erly_pnsn_flg': np.int64
-            }
+        clients = clients[clients_columns]
+        self.processed_data = clients.astype(
+            clients_columns_typing
         )
 
         return self.processed_data
 
 df = pd.read_csv('sample_cntrbtrs_clnts_ops_trn-3.csv', sep = ';', encoding = 'cp1251')
 
-preprocessed = DataProcessorV2().process(clients = df, transactions=None)
+preprocessed = DataProcessorV2(path_to_configs='backend/models/configs/',
+                                config_name = 'processor_v2.yaml').process(clients = df, transactions=None)
 print(preprocessed)
