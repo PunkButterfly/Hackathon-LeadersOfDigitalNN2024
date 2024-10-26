@@ -21,7 +21,7 @@ def correct_names(names_list):
         if name in feature_naming_json:
             corrected_names.append(feature_naming_json[name])
         else:
-            correct_names.append(name)
+            corrected_names.append(name)
 
     return corrected_names
 
