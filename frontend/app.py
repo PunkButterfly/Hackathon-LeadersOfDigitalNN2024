@@ -11,8 +11,8 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 BACKEND_URL = f"http://backend:{os.getenv("BACKEND_PORT")}"
 # BACKEND_URL = f"http://0.0.0.0:8128"
 
+st.set_page_config(page_title="DIGITAL HACK NN 2024", layout="wide")
 st.header("Загрузите данные")
-st.subheader("")
 
 transactions = st.file_uploader("Загрузка файла с транзакциями")
 clients = st.file_uploader("Загрузка файла с клиентами")
@@ -55,6 +55,7 @@ if transactions is not None and clients is not None:
             response_df[shap_cols].values.tolist()
 
             for i in range(len(response_df)):
+                st.write(f"accnt_id: {response_df['accnt_id'].values[i]}, erly_pnsn_flg: {response_df['erly_pnsn_flg'].values[i]}")
                 shap.force_plot(
                     response_df["shap_base_value"].values[i],
                     response_df[shap_cols].values[i],

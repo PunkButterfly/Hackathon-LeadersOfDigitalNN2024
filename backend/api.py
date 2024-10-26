@@ -12,16 +12,17 @@ from models.pipeline import Pipeline
 # WORKDIR = "./backend/"
 WORKDIR = ""
 WEIGHTS_DIR = f"{WORKDIR}models/weights/"
+CONFIGS_DIR = f"{WORKDIR}models/configs/"
 
 app = FastAPI()
 
 
-# from dotenv import load_dotenv 
-# load_dotenv() 
+# from dotenv import load_dotenv
+# load_dotenv()
 
 
-def decode_binary_csv(binary_csv_file):
-    return pd.read_csv(io.StringIO(binary_csv_file.decode("cp1251")), sep=";", encoding="cp1251")
+def decode_binary_csv(binary_csv_file, parse_date_col):
+    return pd.read_csv(io.StringIO(binary_csv_file.decode("cp1251")), sep=";", encoding="cp1251", parse_dates=[parse_date_col])
 
 
 @app.post("/upload_csv/")
@@ -34,11 +35,11 @@ async def upload_files(
     clients_data = await clients.read()
 
     # Обработка файлов
-    decoded_transactions = decode_binary_csv(transactions_data)
-    decoded_clients = decode_binary_csv(clients_data)
+    decoded_transactions = decode_binary_csv(transactions_data, parse_date_col="oprtn_date")
+    decoded_clients = decode_binary_csv(clients_data, parse_date_col="accnt_bgn_date")
 
     # Запуск пайплайна
-    pipeline = Pipeline(path_to_weights=WEIGHTS_DIR, classifier_weights_name=model_weights)
+    pipeline = Pipeline(path_to_weights=WEIGHTS_DIR, classifier_weights_name=model_weights, path_to_configs=CONFIGS_DIR)
     result_df = pipeline.forward(decoded_transactions, decoded_clients)
 
     # Сохраняем результат в CSV-формате
