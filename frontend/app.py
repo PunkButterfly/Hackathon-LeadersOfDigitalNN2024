@@ -13,3 +13,7 @@ st.write("Предсказание раннего выхода на пенсию
 st.write("---")
 st.subheader("Analys")
 st.write("Анализ макроэкономических показателей")
+
+st.write("---")
+st.subheader("Trainpipeline")
+st.write("Конвеер процесса переобучения")
