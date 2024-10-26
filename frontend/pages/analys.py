@@ -15,8 +15,8 @@ feature = st.selectbox(
 )
 
 if feature == "МРОТ в регионе":
-    components.html(open(f"{WORKDIR}/data/mrot.html", 'r', encoding='utf-8').read(), height=500)
+    components.html(open(f".{WORKDIR}/data/mrot.html", 'r', encoding='utf-8').read(), height=500)
 elif feature == "Средняя ЗП":
-    components.html(open(f"{WORKDIR}/data/zp.html", 'r', encoding='utf-8').read(), height=500)
+    components.html(open(f".{WORKDIR}/data/zp.html", 'r', encoding='utf-8').read(), height=500)
 elif feature == "Население":
-    components.html(open("{WORKDIR}/data/people.html", 'r', encoding='utf-8').read(), height=500)
+    components.html(open(".{WORKDIR}/data/people.html", 'r', encoding='utf-8').read(), height=500)
