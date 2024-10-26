@@ -155,6 +155,48 @@ class DataProcessorV12:
         return self.processed_data
 
 
+class DataProcessorV13:
+    """
+    Исходный датасет, клиенты без дат + макроэкономические факторы
+    """
+    def __init__(self, path_to_configs, config_name):
+        current_weights_path = os.path.join(path_to_configs, config_name)
+        with open(current_weights_path, 'r') as file:
+            self.config = yaml.safe_load(file)
+
+    def process(self, transactions: pd.DataFrame, clients: pd.DataFrame):
+        clients_columns_typing = self.config['data']['columns']['clients']
+        clients_columns = list(self.config['data']['columns']['clients'].keys())
+
+        economics_columns_typing = self.config['data']['columns']['economics']
+        economics_columns = list(self.config['data']['columns']['economics'].keys())
+
+        clients = clients[clients_columns]
+
+        clients['gndr'] = clients['gndr'].map({'ж': 0, 'м': 1})
+        clients['okato'] = clients['okato'].fillna('0').apply(lambda x: str(x)[:2])
+        clients['phn'] = clients['phn'].map({'нет': 0, 'да': 1})
+        clients['email'] = clients['email'].map({'нет': 0, 'да': 1})
+        clients['lk'] = clients['lk'].map({'нет': 0, 'да': 1})
+        clients['assgn_npo'] = clients['assgn_npo'].map({'нет': 0, 'да': 1})
+        clients['assgn_ops'] = clients['assgn_ops'].map({'нет': 0, 'да': 1})
+
+        processed_clients = clients.astype(
+            clients_columns_typing
+        )
+
+        economics = pd.read_csv("data/economics.csv")
+
+        economics = economics[economics_columns]
+
+        processed_economics = economics.astype(
+            economics_columns_typing
+        )
+
+        self.processed_data = processed_clients.merge(processed_economics, on=["gndr", "okato"], how='left')
+
+        return self.processed_data
+
 # class DataProcessorV2:
 #     """
 #     Обработанный датасет, только клиенты
