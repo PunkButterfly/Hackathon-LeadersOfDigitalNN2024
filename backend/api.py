@@ -16,8 +16,8 @@ WEIGHTS_DIR = f"{WORKDIR}models/weights/"
 app = FastAPI()
 
 
-# from dotenv import load_dotenv 
-# load_dotenv() 
+# from dotenv import load_dotenv
+# load_dotenv()
 
 
 def decode_binary_csv(binary_csv_file, parse_date_col):
