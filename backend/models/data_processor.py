@@ -185,7 +185,7 @@ class DataProcessorV13:
             clients_columns_typing
         )
 
-        economics = pd.read_csv("data/economics.csv")
+        economics = pd.read_csv("models/data/economics.csv")
 
         economics = economics[economics_columns]
 
