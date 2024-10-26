@@ -2,7 +2,7 @@ from datetime import datetime as dt
 import streamlit as st
 import streamlit.components.v1 as components
 
-# WORKDIR = "./frontend/"
+# WORKDIR = "/frontend/"
 WORKDIR = ""
 
 print(dt.now(), "Analytics Visited")
