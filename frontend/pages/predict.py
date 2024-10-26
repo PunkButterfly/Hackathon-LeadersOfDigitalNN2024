@@ -99,7 +99,7 @@ if transactions is not None and clients is not None:
 
             result_b64 = base64.b64encode(result_csv.encode()).decode()  # Кодирование в строку base64
 
-            # HTML и JavaScript для автоматической загрузки
+            # HTML и JavaScript для формирования ссылки
             download_href = f'''
             <a href="data:file/csv;base64,{result_b64}" download="submission.csv">
                 <script>
