@@ -9,10 +9,10 @@ import shap
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-BACKEND_URL = f"http://backend:{os.getenv("BACKEND_PORT")}"
-# BACKEND_URL = f"http://0.0.0.0:8128"
+# BACKEND_URL = f"http://backend:{os.getenv("BACKEND_PORT")}"
+BACKEND_URL = f"http://0.0.0.0:8128"
 
-# st.set_page_config(page_title="DIGITAL HACK NN 2024", layout="wide")
+st.set_page_config(page_title="DIGITAL HACK NN 2024", layout="wide")
 st.header("Загрузите данные")
 
 transactions = st.file_uploader("Загрузка файла с транзакциями")
@@ -86,31 +86,22 @@ if transactions is not None and clients is not None:
                 
                 # Использование HTML для стилизации текста
                 st.markdown(header_text, unsafe_allow_html=True)
-                # st.divider()
-                # Создание колонок для отображения графика и данных
-                col1, col2 = st.columns(2)
 
-                with col1:
-                    # Отображение таблицы в первой колонке
-                    st.write("Данные клиента (сокращенные)")
-                    selected_cols = ["accnt_id", "brth_yr", "erly_pnsn_flg"]
-                    st.write(row[selected_cols].to_frame().T)  # Один ряд DataFrame
+                st.text(f"Данные клиента {row['accnt_id']} (сокращенные)")
 
+                # Построение и отображение графика во второй колонке
+                shap.force_plot(
+                    row["shap_base_value"],
+                    row[shap_cols].values,
+                    row[features_cols].values,
+                    feature_names=features_cols,
+                    matplotlib=True
+                )
+                st.pyplot()
 
                 with st.expander("Детальные данные клиента"):
                     # Табличные значения текущей записи
                     st.write(row.to_frame().T)
-
-                with col2:
-                    # Построение и отображение графика во второй колонке
-                    shap.force_plot(
-                        response_df["shap_base_value"].values[i],
-                        response_df[shap_cols].values[i],
-                        response_df[features_cols].values[i],
-                        feature_names=features_cols,
-                        matplotlib=True
-                    )
-                    st.pyplot()
 
         else:
             st.error("Failed to upload files")
