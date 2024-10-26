@@ -55,6 +55,7 @@ if transactions is not None and clients is not None:
             response_df[shap_cols].values.tolist()
 
             for i in range(len(response_df)):
+                st.write(f"accnt_id: {response_df['accnt_id']}, erly_pnsn_flg: {response_df['erly_pnsn_flg']}")
                 shap.force_plot(
                     response_df["shap_base_value"].values[i],
                     response_df[shap_cols].values[i],
