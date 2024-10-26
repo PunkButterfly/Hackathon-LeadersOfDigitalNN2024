@@ -150,8 +150,3 @@ class DataProcessorV2:
 
         return self.processed_data
 
-df = pd.read_csv('sample_cntrbtrs_clnts_ops_trn-3.csv', sep = ';', encoding = 'cp1251')
-
-preprocessed = DataProcessorV2(path_to_configs='backend/models/configs/',
-                                config_name = 'processor_v2.yaml').process(clients = df, transactions=None)
-print(preprocessed)
