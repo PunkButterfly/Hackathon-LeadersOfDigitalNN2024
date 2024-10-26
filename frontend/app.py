@@ -15,5 +15,5 @@ st.subheader("Analys")
 st.write("Анализ макроэкономических показателей")
 
 # st.write("---")
-# st.subheader("Trainpipeline")
+# st.subheader("Train pipeline")
 # st.write("Конвеер процесса переобучения")

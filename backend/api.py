@@ -22,7 +22,7 @@ app = FastAPI()
 
 
 def decode_binary_csv(binary_csv_file, parse_date_col):
-    return pd.read_csv(io.StringIO(binary_csv_file.decode("cp1251")), sep=";", encoding="cp1251", parse_dates=[parse_date_col])
+    return pd.read_csv(io.StringIO(binary_csv_file.decode("cp1251")), sep=",", encoding="utf-8", parse_dates=[parse_date_col])
 
 
 @app.post("/upload_csv/")

@@ -29,5 +29,22 @@
     "sum_type": "Тип суммы операции",
     "cmmnt": "Комментарий",
     "sum": "Размер суммы операции",
-    "oprtn_date": "Дата операции"
+    "oprtn_date": "Дата операции",
+    "mrot": "МРОТ", 
+    "all_count": "Кол-во населения", 
+    "all_number_of_respondents": "Кол-во опрошенных", 
+    "all_number_of_sources": "Общий доход", 
+    "all_salary": "Зарплата", 
+    "young_count": "Кол-во населения до 15 лет", 
+    "young_number_of_respondents": "Кол-во опрошенных до 15 лет", 
+    "young_number_of_sources": "Общий доход до 15 лет", 
+    "young_salary": "Зарплата до 15 лет", 
+    "medium_count": "Кол-во населения до 54/59 лет", 
+    "medium_number_of_respondents": "Кол-во опрошенных до 54/59 лет", 
+    "medium_number_of_sources" : "Общий доход до 54/59 лет", 
+    "medium_salary": "Зарплата до 54/59 лет", 
+    "old_count": "Кол-во населения после 54/59 лет", 
+    "old_number_of_respondents": "Кол-во опрошенных после 54/59 лет", 
+    "old_number_of_sources": "Общий доход после 54/59 лет", 
+    "old_salary": "Зарплата после 54/59 лет"
 }
