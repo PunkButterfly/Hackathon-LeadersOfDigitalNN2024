@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import yaml
+import os
 import random
 import yaml
 import os
@@ -7,6 +9,9 @@ import random
 
 
 class DataProcessorV0:
+    """
+    Базовая заглушка
+    """
     """
     Базовая заглушка
     """
@@ -32,7 +37,20 @@ class DataProcessorV1:
         with open(current_weights_path, 'r') as file:
             self.config = yaml.safe_load(file)
 
+    """
+    Исходный датасет, только клиенты
+    """
+    def __init__(self, path_to_configs, config_name):
+        current_weights_path = os.path.join(path_to_configs, config_name)
+        with open(current_weights_path, 'r') as file:
+            self.config = yaml.safe_load(file)
+
     def process(self, transactions: pd.DataFrame, clients: pd.DataFrame):
+        clients_columns_typing = self.config['data']['columns']['clients']
+        clients_columns = list(self.config['data']['columns']['clients'].keys())
+
+        clients = clients[clients_columns]
+
         clients_columns_typing = self.config['data']['columns']['clients']
         clients_columns = list(self.config['data']['columns']['clients'].keys())
 
