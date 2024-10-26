@@ -2,7 +2,7 @@ import pandas as pd
 import shap
 
 from models.classifier import CatBoostPredictor
-from models.data_processor import DataProccesorv0
+from models.data_processor import DataProccesorV0, DataProccesorV1
 
 class Pipeline:
     def __init__(
@@ -13,7 +13,9 @@ class Pipeline:
         self.classifier_model = CatBoostPredictor(path_to_weights=path_to_weights, weights_name=classifier_weights_name)
         
         if classifier_weights_name == 'default_classifier.cbm':
-            self.data_processor = DataProccesorv0()
+            self.data_processor = DataProccesorV0()
+        elif classifier_weights_name == 'classifier_v1.cbm':
+            self.data_processor = DataProccesorV1()
 
     def forward(self, transactions: pd.DataFrame, clients: pd.DataFrame):
         
