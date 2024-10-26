@@ -18,8 +18,6 @@ data:
                 'lk': 'int',
                 'assgn_npo': 'int',
                 'assgn_ops': 'int',
-
-                'erly_pnsn_flg': 'int',
                 }
 
         economics:
