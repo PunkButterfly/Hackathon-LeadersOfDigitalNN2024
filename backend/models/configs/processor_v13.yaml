@@ -1,0 +1,39 @@
+data:
+    columns:
+        clients:
+                {
+                'accnt_id': 'str',
+                'gndr': 'int',
+                'pnsn_age': 'int',
+                'okato': 'int',
+                'phn': 'int',
+                'email': 'int',
+                'lk': 'int',
+                'assgn_npo': 'int',
+                'assgn_ops': 'int',
+
+                'erly_pnsn_flg': 'int',
+                }
+
+        economics:
+                {
+                'okato': 'int',
+                'mrot': 'int',
+                'all_count': 'int',
+                'all_number_of_respondents': 'int',
+                'all_number_of_sources': 'int',
+                'all_salary': 'int',
+                'young_count': 'int',
+                'young_number_of_respondents': 'int',
+                'young_number_of_sources': 'int',
+                'young_salary': 'int',
+                'medium_count': 'int',
+                'medium_number_of_respondents': 'int',
+                'medium_number_of_sources': 'int',
+                'medium_salary': 'int',
+                'old_count': 'int',
+                'old_number_of_respondents': 'int',
+                'old_number_of_sources': 'int',
+                'old_salary': 'int',
+                'gndr': 'int'
+                }
