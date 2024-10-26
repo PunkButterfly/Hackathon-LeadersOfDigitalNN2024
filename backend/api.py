@@ -44,7 +44,7 @@ async def upload_files(
 
     # Сохраняем результат в CSV-формате
     csv_binary_data = io.StringIO()
-    result_df.to_csv(csv_binary_data, index=False)
+    result_df.to_csv(csv_binary_data, sep=",", encoding="utf-8", index=False)
     csv_binary_data.seek(0)
 
     # Возвращаем CSV-данные как StreamingResponse

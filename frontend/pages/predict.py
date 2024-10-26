@@ -26,7 +26,21 @@ def correct_names(names_list):
     return corrected_names
 
 
-def plot_shap_barchart(shap_values, feature_values, feature_names):
+def plot_shap_barchart(shap_values_raw, feature_values_raw, feature_names_raw):
+    shap_values = []
+    feature_values = []
+    feature_names = []
+
+    for i in range(len(shap_values_raw)):
+        if abs(shap_values_raw[i]) > 0.005:
+            shap_values.append(shap_values_raw[i])
+            feature_values.append(feature_values_raw[i])
+            feature_names.append(feature_names_raw[i])
+
+    shap_values = np.array(shap_values)
+    feature_values = np.array(feature_values)
+    feature_names = np.array(feature_names)
+
     # Создадим барчарт, показывающий вклад каждого признака
     fig, ax = plt.subplots(figsize=(10, 6))
 
@@ -50,7 +64,7 @@ def plot_shap_barchart(shap_values, feature_values, feature_names):
 
 BACKEND_URL = f"http://backend:{os.getenv('BACKEND_PORT')}"
 WORKDIR = ""
-# BACKEND_URL = f"http://0.0.0.0:8128"
+# BACKEND_URL = f"http://158.160.17.229:8228"
 # WORKDIR = "/frontend/"
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -71,7 +85,6 @@ model_weights = st.selectbox(
 if transactions is not None and clients is not None:
 
     if st.button("Upload"):
-        st.write("Данные загружены")
         post_data = {"transactions": transactions, "clients": clients}
 
         request_files = {
@@ -110,11 +123,31 @@ if transactions is not None and clients is not None:
                         link.click();
                     }}, 100);
                 </script>
-                Скачать результат в формате для тестирования
+                <h3> <span style='color:blue;'>Скачать результат в формате для тестирования </span></h3>
             </a>
             '''
 
             st.markdown(download_href, unsafe_allow_html=True)
+
+            st.write('---')
+
+            st.subheader(
+                '''
+                :blue[СИНИЕ] показтели вносят вклад в то, что клиент НЕ выйдет на пенсию досрочно.
+                '''
+            )
+            st.subheader(
+                '''
+                :red[КРАСНЫЕ] показатели вносят вклад в то, что клиент ВЫЙДЕТ на пенсию досрочно.
+                '''
+            )
+            st.subheader(
+                '''
+                Чем больше абсолютное значение показателя, тем больше вклад показателя в итоговое решение.
+                '''
+            )
+
+            st.write('---')
 
             cols = response_df.columns.to_list()
             features_cols = [col for col in cols if not col.startswith("shap") and col != "accnt_id"]
@@ -123,18 +156,14 @@ if transactions is not None and clients is not None:
             for i, (idx, row) in enumerate(response_df.iterrows()):
                 # # Данные записи
                 if row["erly_pnsn_flg"]:
-                    header_text = f"""<h2>Клиент <span style='color:red;'> досрочно выйдет на пенсию</span></h2>"""
+                    header_text = f"""<h3>Клиент {row['accnt_id']} <span style='color:red;'> досрочно выйдет на пенсию</span></h3>"""
                 else:
-                    header_text = f"""<h2>Клиент не выйдет на пенсию досрочно</h2>"""
+                    header_text = f"""<h3>Клиент {row['accnt_id']} не выйдет на пенсию досрочно</h3>"""
                 
                 # Использование HTML для стилизации текста
                 st.markdown(header_text, unsafe_allow_html=True)
 
-                st.text(f"Данные клиента {row['accnt_id']} (сокращенные)")
-
                 # Построение и отображение графика во второй колонке
-                print(correct_names(features_cols))
-
                 plot_shap_barchart(
                     row[shap_cols].values,
                     row[features_cols].values,
@@ -146,6 +175,10 @@ if transactions is not None and clients is not None:
                 with st.expander("Детальные данные клиента"):
                     # Табличные значения текущей записи
                     st.write(row.to_frame().T)
+
+                # Ограничение количества записей, чтобы не перегружать процессор, так как отрисовка графиков долгая
+                if i > 12:
+                    break
 
         else:
             st.error("Failed to upload files")
