@@ -5,7 +5,6 @@ data:
                 # 'clnt_id': 'str',
                 'accnt_id': 'str',
                 'gndr': 'int',
-                'brth_yr': 'int',
                 'pnsn_age': 'int',
                 'okato': 'int',
                 'phn': 'int',
@@ -14,8 +13,9 @@ data:
                 'assgn_npo': 'int',
                 'assgn_ops': 'int',
 
+                'age': 'int',
                 'prvs_npf_flg': 'int',
-                'accnt_past_age': 'int',
                 'age_agreement_start': int,
+
                 'erly_pnsn_flg': 'int'
             }
