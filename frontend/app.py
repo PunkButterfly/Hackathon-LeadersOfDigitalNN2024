@@ -1,70 +1,20 @@
-from io import StringIO
-import os
-
-import pandas as pd
-import requests as rq
 import streamlit as st
-import shap
-
-st.set_option('deprecation.showPyplotGlobalUse', False)
-
-BACKEND_URL = f"http://backend:{os.getenv("BACKEND_PORT")}"
-# BACKEND_URL = f"http://0.0.0.0:8128"
 
 st.set_page_config(page_title="DIGITAL HACK NN 2024", layout="wide")
-st.header("Загрузите данные")
 
-transactions = st.file_uploader("Загрузка файла с транзакциями")
-clients = st.file_uploader("Загрузка файла с клиентами")
+st.title("Предсказание раннего выхода на пенсию")
 
-backend_model_list = rq.get(f"{BACKEND_URL}/get_model_names/").json()
+# st.write(
+#     "В рамках хакатона MARKING HACK команда Punk Butterfly разработала сервис, взаимодействующий с системой маркировки\
+#      'ЧЕСТНЫЙ ЗНАК', с помощью которого государство может выявлять потенциально подозрительные на мошенничество точки \
+#      продажи, выявлять монополии среди поставщиков, а также регионы, в которых потенциально может возникнуть дефицит на товары.")
 
-model_weights = st.selectbox(
-    "Выберите модель",
-    backend_model_list,
-)
+st.write("Навигация по сайту находится в левом выпадающем меню")
 
-if transactions is not None and clients is not None:
+st.write("---")
+st.subheader("Predict")
+st.write("Предсказание раннего выхода на пенсию, используя модели машинного обучения, а также интерпритируемость результатов")
 
-    if st.button("Upload"):
-        st.write("Данные загружены")
-        post_data = {"transactions": transactions, "clients": clients}
-
-        request_files = {
-            "transactions": (transactions.name, transactions, "text/csv"),
-            "clients": (clients.name, clients, "text/csv"),
-        }
-
-        data = {
-            "model_weights": model_weights
-        }
-
-    
-        csv_response = rq.post(f"{BACKEND_URL}/upload_csv/", files=request_files, data=data)
-
-        if csv_response.status_code == 200:
-            csv_content = csv_response.content.decode("utf-8")
-            response_df = pd.read_csv(StringIO(csv_content))
-            st.write("Результирующий датафрейм")
-            st.dataframe(response_df)
-
-            cols = response_df.columns.to_list()
-            features_cols = [col for col in cols if not col.startswith("shap") and col != "accnt_id"]
-            shap_cols = [col for col in cols if col.startswith("shap") and col != "accnt_id" and col != "shap_base_value"]
-            response_df[features_cols].values.tolist()
-            response_df[shap_cols].values.tolist()
-
-            for i in range(len(response_df)):
-                st.write(f"accnt_id: {response_df['accnt_id'].values[i]}, erly_pnsn_flg: {response_df['erly_pnsn_flg'].values[i]}")
-                shap.force_plot(
-                    response_df["shap_base_value"].values[i],
-                    response_df[shap_cols].values[i],
-                    response_df[features_cols].values[i],
-                    feature_names=features_cols,
-                    matplotlib=True
-                )
-                st.pyplot()
-                # break
-
-        else:
-            st.error("Failed to upload files")
+st.write("---")
+st.subheader("Analys")
+st.write("Анализ макроэкономических показателей")
