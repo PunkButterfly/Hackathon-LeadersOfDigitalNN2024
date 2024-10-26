@@ -8,14 +8,15 @@ class Pipeline:
     def __init__(
             self,
             path_to_weights: str,
-            classifier_weights_name: str = 'default_classifier.cbm'
+            classifier_weights_name: str,
+            path_to_configs: str
         ):
         self.classifier_model = CatBoostPredictor(path_to_weights=path_to_weights, weights_name=classifier_weights_name)
         
         if classifier_weights_name == 'default_classifier.cbm':
             self.data_processor = DataProcessorV0()
         elif classifier_weights_name == 'classifier_v1.cbm':
-            self.data_processor = DataProcessorV1()
+            self.data_processor = DataProcessorV1(path_to_configs=path_to_configs, config_name='processor_v1.yaml')
 
     def forward(self, transactions: pd.DataFrame, clients: pd.DataFrame):
         
