@@ -2,7 +2,7 @@ import pandas as pd
 import shap
 
 from models.classifier import CatBoostPredictor
-from models.data_processor import DataProcessorV0, DataProcessorV1, DataProcessorV12, DataProcessorV13
+from models.data_processor import DataProcessorV0, DataProcessorV1, DataProcessorV12, DataProcessorV13, DataProcessorV2
 
 class Pipeline:
     def __init__(
@@ -21,6 +21,8 @@ class Pipeline:
             self.data_processor = DataProcessorV12(path_to_configs=path_to_configs, config_name='processor_v12.yaml')
         elif classifier_weights_name == 'classifier_v13_sourceclients_macro_nodates.cbm':
             self.data_processor = DataProcessorV13(path_to_configs=path_to_configs, config_name='processor_v13.yaml')
+        elif classifier_weights_name == 'classifier_v2_historyclients.cbm':
+            self.data_processor = DataProcessorV2(path_to_configs=path_to_configs, config_name='processor_v2.yaml')
 
 
     def forward(self, transactions: pd.DataFrame, clients: pd.DataFrame):
