@@ -2,7 +2,7 @@ import pandas as pd
 import shap
 
 from models.classifier import CatBoostPredictor
-from models.data_processor import DataProcessorV0, DataProcessorV1, DataProcessorV12
+from models.data_processor import DataProcessorV0, DataProcessorV1, DataProcessorV12, DataProcessorV13
 
 class Pipeline:
     def __init__(
