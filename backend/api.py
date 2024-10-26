@@ -1,8 +1,9 @@
 import io
 import os
 
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import StreamingResponse
+from typing import Optional
 import pandas as pd
 import uvicorn
 
@@ -24,7 +25,11 @@ def decode_binary_csv(binary_csv_file):
 
 
 @app.post("/upload_csv/")
-async def upload_files(transactions: UploadFile = File(...), clients: UploadFile = File(...)):
+async def upload_files(
+    transactions: UploadFile = File(...),
+    clients: UploadFile = File(...),
+    model_weights: Optional[str] = Form(None)
+    ):
     transactions_data = await transactions.read()
     clients_data = await clients.read()
 
@@ -32,9 +37,11 @@ async def upload_files(transactions: UploadFile = File(...), clients: UploadFile
     decoded_transactions = decode_binary_csv(transactions_data)
     decoded_clients = decode_binary_csv(clients_data)
 
-    pipeline = Pipeline(path_to_weights=WEIGHTS_DIR, classifier_weights_name="bad_cls_v0.cbm")
-    _, result_df = pipeline.forward(decoded_transactions, decoded_clients)
+    # Запуск пайплайна
+    pipeline = Pipeline(path_to_weights=WEIGHTS_DIR, classifier_weights_name=model_weights)
+    result_df = pipeline.forward(decoded_transactions, decoded_clients)
 
+    # Сохраняем результат в CSV-формате
     csv_binary_data = io.StringIO()
     result_df.to_csv(csv_binary_data, index=False)
     csv_binary_data.seek(0)
@@ -42,6 +49,9 @@ async def upload_files(transactions: UploadFile = File(...), clients: UploadFile
     # Возвращаем CSV-данные как StreamingResponse
     return StreamingResponse(csv_binary_data, media_type="text/csv", headers={"Content-Disposition": "attachment; filename=generated_data.csv"})
 
+@app.get("/get_model_names/")
+async def get_model_names():
+    return os.listdir(WEIGHTS_DIR)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("BACKEND_PORT")))

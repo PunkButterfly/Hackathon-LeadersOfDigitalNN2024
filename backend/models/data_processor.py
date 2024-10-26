@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-class DataProccesor:
+class DataProccesorv0:
     def process(self, transactions: pd.DataFrame, clients: pd.DataFrame):
         clients['gndr'] = clients['gndr'].replace({'ж': 0, 'м': 1})
         self.processed_data = clients[['accnt_id', 'brth_yr', 'prsnt_age', 'gndr', 'erly_pnsn_flg']].astype(
