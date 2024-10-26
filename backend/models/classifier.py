@@ -1,7 +1,6 @@
 import os
 
 from catboost import CatBoostClassifier, Pool
-import numpy as np
 import pandas as pd
 
     
@@ -15,7 +14,7 @@ class CatBoostPredictor:
         self.submission = None
 
     def predict(self, X: pd.DataFrame):
-        pooled = Pool(data=X.drop(['accnt_id'], axis=1))
+        pooled = Pool(data=X)
 
         predictions = self.catboost_classifier.predict(pooled)
 
