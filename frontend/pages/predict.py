@@ -1,16 +1,59 @@
 from io import StringIO
+import json
 import os
 import base64
 
 import pandas as pd
+import numpy as np
 import requests as rq
 import streamlit as st
 import shap
+import matplotlib.pyplot as plt
+
+
+def correct_names(names_list):
+    with open(f'.{WORKDIR}/data/feature_naming.json', 'r', encoding='utf-8') as file:
+        feature_naming_json = json.load(file)
+
+    corrected_names = []
+
+    for name in names_list:
+        if name in feature_naming_json:
+            corrected_names.append(feature_naming_json[name])
+        else:
+            correct_names.append(name)
+
+    return corrected_names
+
+
+def plot_shap_barchart(shap_values, feature_values, feature_names):
+    # Создадим барчарт, показывающий вклад каждого признака
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Порядок и направление графика будут зависеть от значения shap_values
+    indices = np.argsort(shap_values)
+    
+    # Определяем цвета: красный для положительных, синий для отрицательных
+    colors = ['red' if shap > 0 else 'blue' for shap in shap_values[indices]]
+
+    ax.barh(range(len(shap_values)), shap_values[indices], align='center', color=colors)
+    ax.set_yticks(range(len(shap_values)))
+    ax.set_yticklabels([f'{feature_names[i]}: {feature_values[i]}' for i in indices])
+
+    ax.set_xlabel("Значимость признаков")
+
+    plt.gca().invert_yaxis()  # Обратный порядок, чтобы самый положительный был сверху
+    plt.tight_layout()
+    
+    return fig
+
+
+BACKEND_URL = f"http://backend:{os.getenv('BACKEND_PORT')}"
+WORKDIR = ""
+# BACKEND_URL = f"http://0.0.0.0:8128"
+# WORKDIR = "/frontend/"
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
-
-# BACKEND_URL = f"http://backend:{os.getenv("BACKEND_PORT")}"
-BACKEND_URL = f"http://0.0.0.0:8128"
 
 st.set_page_config(page_title="DIGITAL HACK NN 2024", layout="wide")
 st.header("Загрузите данные")
@@ -90,13 +133,14 @@ if transactions is not None and clients is not None:
                 st.text(f"Данные клиента {row['accnt_id']} (сокращенные)")
 
                 # Построение и отображение графика во второй колонке
-                shap.force_plot(
-                    row["shap_base_value"],
+                print(correct_names(features_cols))
+
+                plot_shap_barchart(
                     row[shap_cols].values,
                     row[features_cols].values,
-                    feature_names=features_cols,
-                    matplotlib=True
-                )
+                    correct_names(features_cols)
+                ).show()
+
                 st.pyplot()
 
                 with st.expander("Детальные данные клиента"):
