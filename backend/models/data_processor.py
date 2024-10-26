@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import random
 import yaml
+import os
 
 
 class DataProcessorV0:
@@ -25,8 +26,9 @@ class DataProcessorV1:
     """
     Исходный датасет, только клиенты
     """
-    def __init__(self):
-        with open('./backend/models/configs/processor_v1.yaml', 'r') as file:
+    def __init__(self, path_to_configs, config_name):
+        current_weights_path = os.path.join(path_to_configs, config_name)
+        with open(current_weights_path, 'r') as file:
             self.config = yaml.safe_load(file)
 
     def process(self, transactions: pd.DataFrame, clients: pd.DataFrame):
