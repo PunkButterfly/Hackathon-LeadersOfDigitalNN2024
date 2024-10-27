@@ -9,16 +9,16 @@ import uvicorn
 
 from models.pipeline import Pipeline
 
-# WORKDIR = "./backend/"
-WORKDIR = ""
+WORKDIR = "./backend/"
+# WORKDIR = ""
 WEIGHTS_DIR = f"{WORKDIR}models/weights/"
 CONFIGS_DIR = f"{WORKDIR}models/configs/"
 
 app = FastAPI()
 
 
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def decode_binary_csv(binary_csv_file, parse_date_col):
@@ -55,4 +55,4 @@ async def get_model_names():
     return sorted(os.listdir(WEIGHTS_DIR))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("BACKEND_PORT")))
+    uvicorn.run(app, host="0.0.0.0", port=8228)

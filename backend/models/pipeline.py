@@ -3,6 +3,7 @@ import shap
 
 from models.classifier import CatBoostPredictor
 from models.data_processor import DataProcessorV0, DataProcessorV1, DataProcessorV12, DataProcessorV13, DataProcessorV2
+# from models.data_processor import DataProcessorV0, DataProcessorV1, DataProcessorV12, DataProcessorV13
 
 class Pipeline:
     def __init__(
@@ -23,6 +24,8 @@ class Pipeline:
             self.data_processor = DataProcessorV13(path_to_configs=path_to_configs, config_name='processor_v13.yaml')
         elif classifier_weights_name == 'classifier_v2_historyclients.cbm':
             self.data_processor = DataProcessorV2(path_to_configs=path_to_configs, config_name='processor_v2.yaml')
+        elif classifier_weights_name == 'cringe_classifier_v1.cbm':
+            self.data_processor = DataProcessorV1(path_to_configs=path_to_configs, config_name='processor_v1.yaml') #CRINGE
 
 
     def forward(self, transactions: pd.DataFrame, clients: pd.DataFrame):
