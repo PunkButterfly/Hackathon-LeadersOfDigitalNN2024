@@ -115,8 +115,8 @@ if transactions is not None and clients is not None:
 
             # Создание CSV из DataFrame
             result_csv = response_df[["accnt_id", "erly_pnsn_flg"]].to_csv(
-                sep=';',
-                encoding = 'cp1251',
+                sep=',',
+                encoding = 'utf-8',
                 index=False
             )
 
