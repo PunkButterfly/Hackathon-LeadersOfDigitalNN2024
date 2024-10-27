@@ -52,7 +52,7 @@ async def upload_files(
 
 @app.get("/get_model_names/")
 async def get_model_names():
-    return os.listdir(WEIGHTS_DIR)
+    return sorted(os.listdir(WEIGHTS_DIR))
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("BACKEND_PORT")))
